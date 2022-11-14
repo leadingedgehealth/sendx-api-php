@@ -17,6 +17,9 @@ class SendX
     /** @var string */
     public string $teamId;
 
+    /** @var string */
+    protected string $lastMessage = '';
+
     /**
      * @param string $apiKey
      * @param string $teamId
@@ -47,9 +50,22 @@ class SendX
                 $contact
             );
         } catch (Throwable $e) {
+            $this->lastMessage = $e->getMessage();
             return false;
         }
 
+        $this->lastMessage = '';
         return true;
+    }
+
+    /**
+     * Fetch the last exception message that was recieved during a post. If
+     * the last request was successful, the exception message will be empty.
+     *
+     * @return string
+     */
+    public function getLastMessage(): string
+    {
+        return $this->lastMessage;
     }
 }
